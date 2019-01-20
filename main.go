@@ -9,6 +9,8 @@ import (
 	"math/rand"
 	"log"
 	"net/http"
+	"os"
+	"fmt"
 )
 
 var palette = []color.Color{color.White, color.Black}
@@ -20,7 +22,17 @@ const (
 
 func main() {
 	http.HandleFunc("/", lissajousHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(GetPort(), nil))
+}
+
+func GetPort() string {
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8000"
+		fmt.Println("$PORT must be set")
+	}
+	return ":" + port
 }
 
 func lissajousHandler(w http.ResponseWriter, r *http.Request) {
